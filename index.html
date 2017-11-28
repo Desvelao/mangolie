@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Mango Bot Web</title>
+  <script src="https://www.gstatic.com/firebasejs/4.6.1/firebase.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="row mt-3 mb-3">
+      <div class="col-auto col-md-6">
+        <div class="btn-group">
+          <button class="btn bg-transparent white" id="btn-menu-ranking"><i class="fa fa-trophy btn-selected"></i></button>
+          <button class="btn bg-transparent white" id="btn-menu-player"><i class="fa fa-users"></i></button>
+          <button class="btn bg-transparent white" id="btn-menu-match"><i class="fa fa-ticket"></i></button>
+          <button class="btn bg-transparent white" id="btn-menu-login"><i class="fa fa-key"></i></button>
+          <button class="btn bg-transparent white hide" id="btn-menu-admin"><i class="fa fa-key"></i></button>
+          <button class="btn bg-transparent white hide" id="btn-menu-signout"><i class="fa fa-arrow-right"></i></button>
+        </div>
+      </div>
+      <div class="col col-md text-right social_media justify-content-end align-self-center">
+        <a class="fa fa-gamepad white" href="https://discord.gg/K5krgBg" target = "_blank"></a>
+        <a class="fa fa-twitter white" href="https://twitter.com/fedota2" target = "_blank"></a>
+        <a class="fa fa-home white" href="http://www.fedota2.es/" target = "_blank"></a>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col col-md-9 col-lg-6 text-center" id="menu-ranking">
+        <h3 class="mb-1 white">Ranking</h3>
+        <table class="table" id="ranking-tabla">
+          <thead>
+            <th>Rank</th>
+            <!-- <th></th> -->
+            <th>Jugador/a</th>
+            <th>MMR</th>
+            <th>PJ</th>
+            <th>PG</th>
+          </thead>
+        </table>
+      </div>
+    </div>
+    <div class="row justify-content-center text-center hide" id="menu-player">
+      <div class="col col-md-12">
+        <select class="custom-select mb-3" id="menu-player-select">
+          <option value="" selected>Elige un/a jugador/a</option>
+        </select>
+        <div class="row justify-content-center hide" id="menu-player-info">
+          <div class="col col-md-4 mb-2">
+            <div class="player-card">
+              <img class="player-img" src="" alt="avatar" id="menu-player-img">
+              <div class="player-card-info">
+                <h6 class="mb-1"><strong class="" id="menu-player-username"></strong></h6>
+                <div id="menu-player-stats">
+                  <span><strong>Partidas: </strong><span id='menu-player-stats-games'></span>(<span id='menu-player-stats-wins'></span>)</span>
+                  <span><strong>MMR: </strong><span id='menu-player-stats-mmr'></span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col col-md-auto">
+            <div class="alert alert-danger hide" id="menu-player-no-matches">No se han encontrado las partidas jugadas</div>
+            <table class="table justify-content-center" id="menu-player-table">
+              <thead>
+                <th>ID</th>
+                <th>R</th>
+                <th>Jugada</th>
+                <th>Captura</th>
+              </thead>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center aling-items-center text-center hide" id="menu-match">
+      <div class="col col-lg-8" >
+        <select class="custom-select" id="menu-match-select">
+          <option value="" selected>Elige una partida</option>
+        </select>
+        <div class="info hide" id="match-info">
+          <img class="" src="" alt="">
+          <div class="">
+            <div class="match-info">
+              <span id="match_id"></span>
+              <span id="match_wins"></span>
+              <div id="match_date"></div>
+              <div id="match_img"></div>
+            </div>
+          </div>
+          <div class="row justify-content-around">
+            <div class="col-6">
+              <table class="table d-flex justify-content-center" id="radiant">
+                <tr class="white">
+                  <th class="fondo-verde">Radiant</th>
+                </tr>
+              </table>
+            </div>
+            <div class="col-6">
+              <table class="table d-flex justify-content-center" id="dire">
+                <tr class="white">
+                  <th class="fondo-rojo">Dire</th>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center aling-items-center text-center hide" id="menu-login">
+      <div class="col-11">
+        <div id="menu-login-form">
+          <input class= "input d-block m-auto p-1" type="email" id="login-email" placeholder="Email">
+          <div class="w-100 mb-3"></div>
+          <input class= "input d-block m-auto mb-3 p-1" type="password" id="login-password" placeholder="Contraseña">
+          <div class="w-100 mb-3"></div>
+          <button class="btn btn-primary mb-3" id="btn-login">admin</button>
+          <div class="row justify-content-center">
+            <div class="col-12 col-md-4">
+              <div class="alert alert-danger hide" id="login-alert">El usuari@ y/o la contraseña son incorrectas</div>
+            </div>
+          </div>
+        </div>
+        <form class="hide" id="menu-login-addmatch">
+          <div class="fondo-texto fondo-verde-transparente">
+            Radiant
+            <div class="" id="addmatch-radiant"></div>
+          </div>
+          <div class="fondo-texto fondo-rojo-transparente">
+            Dire
+            <div id="addmatch-dire"></div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="victory margin-tb fondo-texto col-8 col-md-4">
+              ¿Quién ganó?
+              <div class="btn-group" data-toggle="buttons">
+                <label for="radiant" class="btn btn-success mb-0 fondo-verde-transparente" checked>
+                  <input id="input_radiant" name="victory" type="radio" class="mr-1" checked>Radiant
+                </label>
+                <label for="dire" class="btn btn-danger mb-0 fondo-rojo-transparente">
+                  <input id="input_dire" name="victory" type="radio" class="mr-1">Dire
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row addmatch-match justify-content-center">
+            <input class="col-4 col-md-2 custom-select mb-3 mr-3" id="addmatch-match_id" type="number" placeholder="id partida" min="0">
+            <div class="col-4 col-lg-3 white mb-3 btn btn-success">
+              <label class="boton-fs" for="addmatch-upload" id="addmatch-upload-label"><i class="fa fa-file-image-o white mr-3"></i>Captura</label>
+              <input type="file" value="upload" id="addmatch-upload" name="addmatch-upload" accept=".jpg, .jpeg, .png">
+            </div>
+
+            <!-- <div class="mb-3 boton-file col-4">Añade captura -->
+              <!-- <label class="custom-file" id="addmatch-upload-label">
+                <input type="file" class="custom-file-input" value="upload" id="addmatch-upload" accept="image/x-png,image/gif,image/jpeg">
+                <span class="custom-file-control"></span>
+              </label> -->
+              <!-- <input class="white" type="file" value="upload" id="addmatch-upload" accept="image/x-png,image/gif,image/jpeg"> -->
+            <!-- </div> -->
+          </div>
+
+          <div class="mb-3">
+            <input class="btn btn-primary btn-block" id="addmatch-submit" type="submit" value="Subir">
+          </div>
+        </form>
+        <div class="alert alert-danger hide" id="addmatch-error-players">Algún <strong>jugador/a</strong> se repite</div>
+        <div class="alert alert-danger hide" id="addmatch-error-match_id"><strong>ID partida</strong> debe ser un número entero positivo</div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+  <script src="main.js"></script>
+</body>
+</html>

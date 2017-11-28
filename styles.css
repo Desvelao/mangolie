@@ -1,0 +1,258 @@
+* {
+    box-sizing: border-box;
+}
+
+body{
+  font-family: Roboto, sans-serif;
+  font-size: 16px;
+  /*background: #0a79d4 url("http://7wallpapers.net/wp-content/uploads/1_Dota2-Phantom-Assassin.jpg") center;*/
+  background: #0a79d4 url("https://images.alphacoders.com/472/thumb-1920-472418.jpg") center;
+  background-size: cover;
+  min-height: 100vh;
+  /*max-width: 100vw;*/
+}
+
+.container{}
+.centrar{
+  margin:0 auto;
+}
+
+.social_media{
+  display: inline-block;
+}
+
+.social_media a{
+  text-decoration: none;
+  font-size: 1.5em;
+  margin: 0 .2em;
+  transition: 0.5s ease-in-out;
+}
+
+@keyframes motion {
+  0%{color:white}
+  100%{color: #b303b6}
+};
+
+boton:hover, .social_media a:hover{
+  animation: motion 1s linear infinite;
+  transform: translate(0,1em);
+}
+
+.social_media a:hover{
+    color: #b303b6;
+}
+
+
+.boton{
+  background-color: transparent;
+  text-decoration: none;
+  border: none;
+  outline: none;
+  padding: 0 0.2em;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  color: white;
+}
+
+.btn-selected{
+  color: #b303b6;
+}
+
+.table-title{
+  width: 50%;
+  color: white;
+  text-align: center;
+}
+
+.player-card{
+  width: 100%;
+  background: #0a79d4 url("https://s3-ap-southeast-1.amazonaws.com/mineski-www-production/imgur/lJAMzI0.jpg") center;
+  background-size: cover;
+  background-blend-mode: luminosity;
+  padding: .5em;
+  background-color: rgba(0,0,0,.75);
+  border-radius: 1em;
+  /*border: 2px solid #b303b6;*/
+  margin: 0 auto;
+  /*box-shadow: 5px 5px 5px #000;*/
+}
+
+.player-img{
+  border-radius: 50%;
+  width: 25%;
+  border: 2px solid #b303b6;
+  margin-right: 1em;
+}
+
+.player-card > .player-card-info{
+  display: inline-block;
+  vertical-align: middle;
+  color: white;
+  text-align: center;
+  border-radius: 1em;
+}
+.player-card-info > div{
+  color : #d0d0d0;
+  font-size: 0.8em;
+}
+
+.white-bg{
+  background-color: white;
+}
+button:focus {box-shadow: 0 0 0 0 white !important}
+.puntero:hover{
+  cursor: pointer;
+}
+table{
+  border-collapse: collapse;
+  border: none;
+  max-width: 80%;
+  padding: 0 !important;
+}
+
+table th{
+  background-color: #b303b6;
+  color: white;
+}
+
+th{
+  padding: 1em !important;
+}
+td{
+  padding: 0.5em !important;
+}
+th, td {
+  border: 0 !important;
+  height: 1.5em;
+  text-align: center;
+  border-top: 0;
+}
+tr:nth-child(odd){background-color: #f2f2f2}
+tr:nth-child(even){background-color: white}
+td img{
+  height: 1.5em;
+  border-radius: 50%;
+}
+
+.centrar-tabla{
+  margin-left: auto;
+  margin-right: auto;
+  float:none;
+}
+.contenedor-tabla{
+  width: 100%;
+}
+.match-info{
+  display: inline-block;
+  padding: 1em;
+  margin-bottom: 1em;
+  color: white;
+  background-color: rgba(0,0,0,.5);
+  border-radius: 0.2em;
+  border: 1px solid white;
+}
+
+.fondo-texto{
+  display: inline-block;
+  padding: .5em;
+  margin-bottom: 1em;
+  color: white;
+  background-color: rgba(0,0,0,.5);
+  border-radius: 0.2em;
+  border: 1px solid white;
+}
+
+.fondo-verde{
+  background-color: #4CAF50;
+}
+
+.fondo-rojo{
+  background-color: #FF0000;
+}
+
+.fondo-verde-transparente{
+  background-color: rgba(76, 175, 80, 0.4);
+}
+
+.fondo-rojo-transparente{
+  background-color: rgba(255, 0, 0, 0.4);
+}
+
+.margen-tb{
+  margin: 1em 0;
+}
+#radiant,#dire{
+  display: inline-block;
+}
+
+#addmatch-radiant select,#addmatch-dire select{margin: 0.5em 1em}
+.boton-fs{
+  font-size: 1em;
+}
+.padding-cero-h{
+  padding: 0;
+}
+.white{
+  color :white;
+}
+
+.text-deco-none{
+  text-decoration: none
+}
+
+.hide{
+  display:none;
+}
+
+@media only screen and (max-width: 767px){
+  body{
+    font-size: 12px;
+  }
+  .boton-fs{
+    font-size: 12px !important;
+  }
+  .player-card{
+    width: 80%;
+  }
+}
+
+table{
+  padding: 0;
+}
+#addmatch-match_id{
+  padding: .2em;
+  background-color: #f2f2f2;
+  border-radius: .2em;
+}
+#addmatch-upload{
+  background-color: red;
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  top:0;
+  bottom: 0;
+  left:0;
+  right:0;
+}
+#addmatch-upload-label{
+  width: 100%;
+  height : 100%;
+  margin: 0;
+}
+.addmatch-upload-match{
+  display: inline;
+  width: 80%;
+  background-color: #f2f2f2;
+  border-radius: .2em;
+  padding: .5em;;
+  position: relative;
+  text-align: center;
+}
+.custom-file-control:lang(es)::after {
+  content: "Selecciona imagen...";
+}
+
+.custom-file-control:lang(es)::before {
+  content: "Explorar";
+}
