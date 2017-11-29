@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Mango Bot Web</title>
+  <link rel="icon" type="image/jpg" href="mango.jpg"/>
   <script src="https://www.gstatic.com/firebasejs/4.6.1/firebase.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/7.0.0/normalize.min.css">
@@ -13,8 +14,44 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <nav class="navbar navbar-expand-md p-0 bg-primary fixed-top">
+    <div class="container">
+      <!-- <div class="navbar-toggler bg-transparent" type="button" data-toggle="collapse" data-target="#dv-menu" aria-controls="dv-menu" aria-expanded="false" aria-label="Menu">
+        <span class="navbar-toggler-icon text-white"></span>
+      </div> -->
+      <div class="btn-group">
+        <button class="btn bg-transparent text-white" id="btn-menu-ranking"><i class="fa fa-trophy btn-selected"></i></button>
+        <button class="btn bg-transparent text-white" id="btn-menu-player"><i class="fa fa-users"></i></button>
+        <button class="btn bg-transparent text-white" id="btn-menu-match"><i class="fa fa-ticket"></i></button>
+        <button class="btn bg-transparent text-white" id="btn-menu-login"><i class="fa fa-key"></i></button>
+        <button class="btn bg-transparent text-white hide" id="btn-menu-admin"><i class="fa fa-key"></i></button>
+        <button class="btn bg-transparent text-white hide" id="btn-menu-signout"><i class="fa fa-arrow-right"></i></button>
+      </div>
+      <div class="text-right social_media justify-content-end align-self-center">
+        <a class="fa fa-gamepad text-white mx-2" href="https://discord.gg/K5krgBg" target = "_blank"></a>
+        <a class="fa fa-twitter text-white mx-2" href="https://twitter.com/fedota2" target = "_blank"></a>
+        <a class="fa fa-home text-white mx-2" href="http://www.fedota2.es/" target = "_blank"></a>
+      </div>
+      <!-- <div class="" id="dv-menu">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item"><button class="btn bg-transparent white" id="btn-menu-ranking"><i class="fa fa-trophy btn-selected"></i></button></li>
+          <li class="nav-item"><button class="btn bg-transparent white" id="btn-menu-player"><i class="fa fa-users"></i></button></li>
+          <li class="nav-item"><button class="btn bg-transparent white" id="btn-menu-match"><i class="fa fa-ticket"></i></button></li>
+          <li class="nav-item"><button class="btn bg-transparent white" id="btn-menu-login"><i class="fa fa-key"></i></button></li>
+          <li class="nav-item"><button class="btn bg-transparent white hide" id="btn-menu-admin"><i class="fa fa-key"></i></button></li>
+          <li class="nav-item"><button class="btn bg-transparent white hide" id="btn-menu-signout"><i class="fa fa-arrow-right"></i></button></li>
+        </ul>
+        <div class="text-right social_media justify-content-end align-self-center">
+          <a class="fa fa-gamepad white" href="https://discord.gg/K5krgBg" target = "_blank"></a>
+          <a class="fa fa-twitter white" href="https://twitter.com/fedota2" target = "_blank"></a>
+          <a class="fa fa-home white" href="http://www.fedota2.es/" target = "_blank"></a>
+        </div>
+      </div> -->
+    </div>
+  </nav>
+  <div class="dv-separator"></div>
   <div class="container">
-    <div class="row mt-3 mb-3">
+    <!-- <div class="row mt-3 mb-3">
       <div class="col-auto col-md-6">
         <div class="btn-group">
           <button class="btn bg-transparent white" id="btn-menu-ranking"><i class="fa fa-trophy btn-selected"></i></button>
@@ -30,7 +67,7 @@
         <a class="fa fa-twitter white" href="https://twitter.com/fedota2" target = "_blank"></a>
         <a class="fa fa-home white" href="http://www.fedota2.es/" target = "_blank"></a>
       </div>
-    </div>
+    </div> -->
     <div class="row justify-content-center">
       <div class="col col-md-9 col-lg-6 text-center" id="menu-ranking">
         <h3 class="mb-1 white">Ranking</h3>

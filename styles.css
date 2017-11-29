@@ -13,6 +13,14 @@ body{
 }
 
 .container{}
+
+.dv-bg-navbar{
+  background-color: rgba(179, 3, 182, 0.68);
+}
+
+.dv-separator{
+  margin-top: 56px;
+}
 .centrar{
   margin:0 auto;
 }
@@ -56,6 +64,7 @@ boton:hover, .social_media a:hover{
 }
 
 .btn-selected{
+  /*color: #e2f50d;*/
   color: #b303b6;
 }
 
