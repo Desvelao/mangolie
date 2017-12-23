@@ -14,20 +14,24 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <nav class="navbar navbar-expand-md p-0 bg-primary fixed-top">
+  <nav class="navbar navbar-expand-md p-0 bg-primary fixed-top justify-content-between">
     <div class="container">
       <!-- <div class="navbar-toggler bg-transparent" type="button" data-toggle="collapse" data-target="#dv-menu" aria-controls="dv-menu" aria-expanded="false" aria-label="Menu">
         <span class="navbar-toggler-icon text-white"></span>
       </div> -->
       <div class="btn-group">
-        <button class="btn bg-transparent text-white" id="btn-menu-ranking"><i class="fa fa-trophy btn-selected"></i></button>
-        <button class="btn bg-transparent text-white" id="btn-menu-player"><i class="fa fa-users"></i></button>
-        <button class="btn bg-transparent text-white" id="btn-menu-match"><i class="fa fa-ticket"></i></button>
-        <button class="btn bg-transparent text-white" id="btn-menu-login"><i class="fa fa-key"></i></button>
-        <button class="btn bg-transparent text-white hide" id="btn-menu-admin"><i class="fa fa-key"></i></button>
-        <button class="btn bg-transparent text-white hide" id="btn-menu-signout"><i class="fa fa-arrow-right"></i></button>
+        <button class="btn bg-transparent text-white dv-btn-menu mx-2" id="btn-menu-ranking"><i class="fa fa-trophy btn-selected"></i></button>
+        <button class="btn bg-transparent text-white dv-btn-menu mx-2" id="btn-menu-player"><i class="fa fa-users"></i></button>
+        <button class="btn bg-transparent text-white dv-btn-menu mx-2" id="btn-menu-match"><i class="fa fa-ticket"></i></button>
+        <button class="btn bg-transparent text-white dv-btn-menu mx-2" id="btn-menu-login"><i class="fa fa-key"></i></button>
+        <button class="btn bg-transparent text-white hide dv-btn-menu mx-2" id="btn-menu-admin"><i class="fa fa-key"></i></button>
+        <button class="btn bg-transparent text-white hide dv-btn-menu mx-2" id="btn-menu-signout"><i class="fa fa-arrow-right"></i></button>
       </div>
-      <div class="text-right social_media justify-content-end align-self-center">
+      <div class="text-white">
+        <!-- <img class="d-inline-block w-25" src="mango.jpg" alt="Mango"> -->
+        <div class="d-none d-md-block">MangoLIE <small class=" text-muted">created by Desvelao^^</small></div>
+      </div>
+      <div class="social_media align-self-center">
         <a class="fa fa-gamepad text-white mx-2" href="https://discord.gg/K5krgBg" target = "_blank"></a>
         <a class="fa fa-twitter text-white mx-2" href="https://twitter.com/fedota2" target = "_blank"></a>
         <a class="fa fa-home text-white mx-2" href="http://www.fedota2.es/" target = "_blank"></a>
@@ -76,7 +80,7 @@
             <th>Rank</th>
             <!-- <th></th> -->
             <th>Jugador/a</th>
-            <th>MMR</th>
+            <!-- <th>Puntos</th> -->
             <th>PJ</th>
             <th>PG</th>
           </thead>
@@ -89,19 +93,21 @@
           <option value="" selected>Elige un/a jugador/a</option>
         </select>
         <div class="row justify-content-center hide" id="menu-player-info">
-          <div class="col col-md-4 mb-2">
+          <div class="col-12 col-md-4 mb-2">
             <div class="player-card">
               <img class="player-img" src="" alt="avatar" id="menu-player-img">
               <div class="player-card-info">
                 <h6 class="mb-1"><strong class="" id="menu-player-username"></strong></h6>
                 <div id="menu-player-stats">
-                  <span><strong>Partidas: </strong><span id='menu-player-stats-games'></span>(<span id='menu-player-stats-wins'></span>)</span>
-                  <span><strong>MMR: </strong><span id='menu-player-stats-mmr'></span></span>
+                  <span><strong>Partidas: </strong><span id='menu-player-stats-games'>
+                  </span>
+                  <!-- (<span id='menu-player-stats-wins'></span>)</span> -->
+                  <span><strong>Victorias: </strong><span id='menu-player-stats-mmr'></span></span>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col col-md-auto">
+          <div class="col-12 col-md-auto">
             <div class="alert alert-danger hide" id="menu-player-no-matches">No se han encontrado las partidas jugadas</div>
             <table class="table justify-content-center" id="menu-player-table">
               <thead>

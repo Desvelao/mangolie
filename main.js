@@ -36,8 +36,10 @@
       snap = snap.val();
       var array = Object.keys(snap).map((k) => {el = snap[k]; el.discord_id = k; return el}).filter((el) => {if(el.lie && el.lie.games > 0){return true}else{return false}});
       array.sort(function(a,b){
-        let mmr = b.lie.mmr - a.lie.mmr;
-        if(mmr !== 0){return mmr};
+        // let mmr = b.lie.mmr - a.lie.mmr;
+        // if(mmr !== 0){return mmr};
+        let wins = b.lie.wins - a.lie.wins;
+        if(wins !== 0){return wins};
         let user1 = a.username.toLowerCase(), user2 = b.username.toLowerCase();
         if(user1 < user2){return -1};
         if(user1 > user2){return 1};
@@ -53,9 +55,9 @@
         player.onclick = player_click;
         player.value = data.discord_id;
         // row.insertCell(2).innerText = data.username;
-        row.insertCell(2).innerText = data.lie.mmr;
-        row.insertCell(3).innerText = data.lie.games;
-        row.insertCell(4).innerText = data.lie.wins;
+        // row.insertCell(2).innerText = data.lie.mmr;
+        row.insertCell(2).innerText = data.lie.games;
+        row.insertCell(3).innerText = data.lie.wins;
       }
     })
   }
@@ -77,8 +79,8 @@
         $('#menu-player-img').src = player.avatar;
         $('#menu-player-username').innerText = player.username;
         $('#menu-player-stats-games').innerText = player.lie.games;
-        $('#menu-player-stats-wins').innerText = player.lie.wins;
-        $('#menu-player-stats-mmr').innerText = player.lie.mmr;
+        // $('#menu-player-stats-wins').innerText = player.lie.wins;
+        $('#menu-player-stats-mmr').innerText = player.lie.wins;
         var liematches = shot.val();
         var player_matches = Object.keys(liematches).map((m) => {var match = liematches[m]; match.id = m; return match}).filter((m) => {
           let radiant_play = m.radiant.split(',').find(p => p === player_id);

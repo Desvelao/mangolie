@@ -14,6 +14,10 @@ body{
 
 .container{}
 
+.dv-btn-menu{
+  padding: 0;
+}
+
 .dv-bg-navbar{
   background-color: rgba(179, 3, 182, 0.68);
 }
