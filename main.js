@@ -13,8 +13,9 @@
   };
   var webLogin = {email : 'public@mango.io', password : 'public'};
   firebase.initializeApp(config);
-  const db = {db : firebase.database().ref(), profiles : firebase.database().ref().child('profiles'), lie : firebase.database().ref().child('lie'), matches : firebase.database().ref().child('lie').child('matches')};
+  const db = {db : firebase.database().ref(), profiles : firebase.database().ref().child('profiles'), lie : firebase.database().ref().child('lie'), matches : firebase.database().ref().child('lie').child('matches'), feed : firebase.database().ref().child('lie').child('feed')};
   const storage = {lie : firebase.storage().ref('lie')};
+  const emojis = {match : {add : "✅",delete : "❌", switch : "🔁"}}
   //console.log('Hola');
   const rewardPoints = {match_played : 1, match_wins : 2};
   function init(){
@@ -192,6 +193,8 @@
       var winner = snap.radiant_wins ? 'Radiant' : 'Dire'
       $('#match_wins').innerText = 'Ganador: ' + winner;
       $('#match_date').innerText = date(snap.ts);
+      $('#match-info').setAttribute('match_id', match_id);
+      $('#match-info').setAttribute('radiant_wins', snap.radiant_wins);
       db.profiles.once('value').then((shot) => {
         shot = shot.val();
         var teams = {radiant : snap.radiant.split(",").map((id) => getPlayerFromID(id,shot)),dire : snap.dire.split(",").map((id) => getPlayerFromID(id,shot))}
@@ -213,6 +216,13 @@
         firebase.storage().ref('lie/'+match_id+'.jpg').getDownloadURL().then(function(url){
           if(url){$('#match_img').innerHTML = `<a class="fa fa-file-image-o white text-deco-none" href="${url}" target= "_blank"></a>`}
         }).catch(e => {$('#match_img').innerHTML = ''})
+        let user = firebase.auth().currentUser;
+        if(user && user.email !== webLogin.email){ // && user.email !== webLogin.email
+          // console.log(user);
+          $("#match-info-admin").classList.remove('hide');
+        }else{
+          $("#match-info-admin").classList.add('hide');
+        }
         showComponent('match');
         $("#match-info").classList.remove('hide');
       })
@@ -229,10 +239,13 @@
     $('#menu-login').classList.add('hide');
     $('#btn-menu-login').getElementsByTagName("I")[0].classList.remove('btn-selected');
     $('#btn-menu-admin').getElementsByTagName("I")[0].classList.remove('btn-selected');
+    $('#menu-feed').classList.add('hide');
+    $('#btn-menu-feed').getElementsByTagName("I")[0].classList.remove('btn-selected');
     if(component !== 'admin'){
       $('#menu-'+component).classList.remove('hide');
     }else{
       $('#menu-login').classList.remove('hide');
+      if(component === 'login'){$('#btn-menu-'+component).getElementsByTagName("I")[0].classList.remove('hide');}
     }
     $('#btn-menu-'+component).getElementsByTagName("I")[0].classList.add('btn-selected');
   }
@@ -247,6 +260,76 @@
     showComponent('match');
   })
 
+  $('#match-info-admin-delete').addEventListener('click',function(){
+    let match_id = $('#match-info').getAttribute('match_id');
+    if(!match_id){return};
+    let info = getInfoFromMatchWeb();
+    // console.log(info);
+    db.profiles.once('value').then((snap) => {
+      snap = snap.val();
+      // console.log('RADIANT');
+      info.radiant.forEach((player) => {
+        let dbplayer = snap[player].lie
+        let victory = info.radiant_wins ? dbplayer.wins - 1 : dbplayer.wins;
+        // console.log(`Delete stats from ${player}`,dbplayer.wins, victory);
+        // db.profiles.child(player+'/lie').update({games : dbplayer.games - 1, wins : info.radiant_wins ? dbplayer.wins - 1 : dbplayer.wins})
+      });
+      // console.log('DIRE');
+      info.dire.forEach((player) => {
+        let dbplayer = snap[player].lie
+        let victory = !info.radiant_wins ? dbplayer.wins - 1 : dbplayer.wins;
+        // console.log(`Delete stats from ${player}`,dbplayer.wins, victory);
+        // db.profiles.child(player+'/lie').update({games : dbplayer.games - 1, wins : !info.radiant_wins ? dbplayer.wins - 1 : dbplayer.wins})
+      })
+      // db.matches.child(info.match_id).remove();
+      addFeed('deletematch',match_id);
+    });
+  })
+  $('#match-info-admin-switch-winner').addEventListener('click',function(){
+    let match_id = $('#match-info').getAttribute('match_id');
+    if(!match_id){return};
+    let info = getInfoFromMatchWeb();
+    // console.log(info);
+    db.profiles.once('value').then((snap) => {
+      snap = snap.val();
+      // console.log('RADIANT');
+      info.radiant.forEach((player) => {
+        let dbplayer = snap[player].lie
+        let victory = !info.radiant_wins ? dbplayer.wins + 1 : dbplayer.wins - 1;
+        // console.log(`Switch team victory from ${player}`,dbplayer.wins, victory);
+        // db.profiles.child(player+'/lie').update({wins : !info.radiant_wins ? dbplayer.wins + 1 : dbplayer.wins})
+      });
+      // console.log('DIRE');
+      info.dire.forEach((player) => {
+        let dbplayer = snap[player].lie
+        let victory = info.radiant_wins ? dbplayer.wins + 1 : dbplayer.wins - 1;
+        // console.log(`Switch team victory from ${player}`,dbplayer.wins, victory);
+        // db.profiles.child(player+'/lie').update({wins : info.radiant_wins ? dbplayer.wins + 1 : dbplayer.wins})
+      })
+      // db.matches.child(info.match_id).remove();
+      addFeed('switchmatch',match_id);
+      match_show(match_id);
+    });
+  })
+
+  function getInfoFromMatchWeb(){
+    let match_id = $('#match-info').getAttribute('match_id');
+    if(!match_id){return};
+    let radiant_wins = ($('#match-info').getAttribute('radiant_wins') == 'true');
+    let info = {radiant : [], dire : [], match_id : match_id, radiant_wins : radiant_wins}
+    // console.log(match_id,radiant_wins);
+    var radiant = $('#radiant'),dire = $('#dire');
+    // console.log(radiant.rows.length,dire.rows.length);
+    for (var i = 1; i < radiant.rows.length; i++) {
+      // console.log(radiant.rows[i].value);
+      info.radiant.push(radiant.rows[i].value)
+    }
+    for (var i = 1; i < dire.rows.length; i++) {
+      info.dire.push(dire.rows[i].value)
+    }
+    return info
+    // console.log(info);
+  }
   function playerReset(callback){
     deleteChildNodesSaveFirst($("#menu-player-select"));
     db.profiles.once('value').then((snap) => {
@@ -315,15 +398,16 @@
     let email = $('#login-email').value;
     let password = $('#login-password').value;
     firebase.auth().signInWithEmailAndPassword(email,password).then(() => {
-      $('#menu-login-addmatch').classList.remove('hide');
-      $('#btn-menu-login').classList.add('hide');
-      $('#menu-login-form').classList.add('hide');
-      $('#login-alert').classList.add('hide');
-      $('#btn-menu-admin').classList.remove('hide');
-      $('#btn-menu-admin').classList.add('btn-selected');
-      $('#btn-menu-signout').classList.remove('hide');
       db.profiles.once('value').then((snap) => {
         if(!snap.exists()){return};
+        $('#menu-login-addmatch').classList.remove('hide');
+        $('#btn-menu-login').classList.add('hide');
+        $('#menu-login-form').classList.add('hide');
+        $('#login-alert').classList.add('hide');
+        $('#btn-menu-admin').classList.remove('hide');
+        $('#btn-menu-admin').getElementsByTagName("I")[0].classList.add('btn-selected');
+        $('#btn-menu-feed').classList.remove('hide');
+        $('#btn-menu-signout').classList.remove('hide');
         snap = snap.val();
         var array = Object.keys(snap).map((k) => {el = snap[k]; el.discord_id = k; return el}).filter((el) => el.lie);
         array.sort(function(a,b){
@@ -349,6 +433,8 @@
         }
         $('#login-email').value = "";
         $('#login-password').value = "";
+        feed_show();
+        // showComponent('feed');
         //$('#menu-login-addmatch')
       })
     }).catch((error) => {
@@ -425,8 +511,9 @@
     firebase.auth().signOut().then(() => {
       $('#menu-login-addmatch').classList.add('hide');
       $('#menu-login-form').classList.remove('hide');
-      $('#btn-menu-admin').classList.add('hide');
       $('#btn-menu-signout').classList.add('hide');
+      $('#btn-menu-feed').classList.add('hide');
+      $('#btn-menu-admin').classList.add('hide');
       $('#btn-menu-login').classList.remove('hide');
       $('#addmatch-error-players').classList.add('hide');
       $('#addmatch-error-match_id').classList.add('hide');
@@ -435,7 +522,7 @@
         deleteChildNodes(select);
         deleteCurrentNode(select)
       }
-      firebase.auth().signInWithEmailAndPassword(webLogin.email,webLogin.password);
+      firebase.auth().signInWithEmailAndPassword(webLogin.email,webLogin.password).then(() => {showComponent('login')});
     })
   })
 
@@ -466,8 +553,64 @@
         let player = Object.keys(snap).map((k) => {el = snap[k]; el.discord_id = k; return el}).find(p => p.discord_id === players[i])
         db.profiles.child(player.discord_id+'/lie').update({games : player.lie.games + 1, wins : player.lie.wins + ((((i < 5) && radiant_wins) || ((i > 4) && !radiant_wins)) ? 1 : 0)})
       }
+      addFeed('addmatch',match_id);
       resetForm($('#menu-login-addmatch'));
     })
+  })
+
+  function addFeed(modo,match_id){
+    let now = Math.round((new Date().getTime())/1000);
+    let adminName = getAdminName();
+    if(!adminName){return};
+    let update = {};
+    if(modo !== 'text'){
+      update[now.toString()] = `${modo};${match_id};${adminName}`
+    }else{update[now.toString()] = `${modo};${match_id}`}
+    db.lie.child('feed').update(update)
+  }
+  function getAdminName(){
+    let user = firebase.auth().currentUser;
+    if(user){ // && user.email !== webLogin.email
+      let name = user.email.match(/(.*)@/g)
+      // console.log('Name',name);
+      if(name){return name[0].slice(0,-1)}else{return false}
+    }else{
+      return false
+    }
+  }
+  function parseFeeds(text){
+    let [modo,id,admin] = text.split(';');
+    if(modo === 'addmatch'){
+      return `${emojis.match.add} <strong>${id}</strong> - @<strong>${admin}</strong>`
+    }else if(modo === 'deletematch'){
+      return `${emojis.match.delete} <strong>${id}</strong> - @<strong>${admin}</strong>`
+    }else if(modo === 'switchmatch'){
+      return `${emojis.match.switch} <strong>${id}</strong> - @<strong>${admin}</strong>`
+    }else if(modo === 'text'){
+      return `${id}`
+    }
+  }
+  function feed_show(){
+    const table = $("#feed-tabla").childNodes[1];
+    deleteChildNodesSaveFirst(table);
+    db.feed.once('value').then((snap) => {
+      if(!snap.exists()){return};
+      snap = snap.val();
+      var feeds = Object.keys(snap).map((k) => {return {ts : parseInt(k), text : snap[k]}});
+      feeds.sort(function(a,b){return parseInt(b.ts) - parseInt(a.ts)});
+      let counter = 1;
+      feeds.forEach((feed) => {
+        const row = table.insertRow(counter);
+        row.insertCell(0).innerText = date(feed.ts);
+        row.insertCell(1).innerHTML = parseFeeds(feed.text);
+        // row.insertCell(1).classList.add('text-left')
+        counter++
+      })
+      showComponent('feed')
+    })
+  }
+  $('#btn-menu-feed').addEventListener('click',function(){
+    feed_show();
   })
   init()
 })()

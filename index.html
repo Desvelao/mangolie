@@ -25,6 +25,7 @@
         <button class="btn bg-transparent text-white dv-btn-menu mx-2" id="btn-menu-match"><i class="fa fa-ticket"></i></button>
         <button class="btn bg-transparent text-white dv-btn-menu mx-2" id="btn-menu-login"><i class="fa fa-key"></i></button>
         <button class="btn bg-transparent text-white hide dv-btn-menu mx-2" id="btn-menu-admin"><i class="fa fa-key"></i></button>
+        <button class="btn bg-transparent text-white hide dv-btn-menu mx-2" id="btn-menu-feed"><i class="fa fa-inbox"></i></button>
         <button class="btn bg-transparent text-white hide dv-btn-menu mx-2" id="btn-menu-signout"><i class="fa fa-arrow-right"></i></button>
       </div>
       <div class="text-white">
@@ -124,11 +125,11 @@
     </div>
     <div class="row justify-content-center aling-items-center text-center hide" id="menu-match">
       <div class="col col-lg-8" >
-        <select class="custom-select" id="menu-match-select">
+        <select class="custom-select mb-2" id="menu-match-select">
           <option value="" selected>Elige una partida</option>
         </select>
         <div class="info hide" id="match-info">
-          <img class="" src="" alt="">
+          <!-- <img class="" src="" alt=""> -->
           <div class="">
             <div class="match-info">
               <span id="match_id"></span>
@@ -152,6 +153,16 @@
                 </tr>
               </table>
             </div>
+          </div>
+          <div id="match-info-admin" class="row justify-content-center hide">
+            <button class="btn btn-danger text-white mx-2" id="match-info-admin-delete">
+              <!-- <i class="fa fa-trophy"></i> -->
+              ❌ Borrar partida
+            </button>
+            <button class="btn btn-warning text-white mx-2" id="match-info-admin-switch-winner">
+              <!-- <i class="fa fa-trophy"></i> -->🔁 Cambiar victoria equipo
+            </button>
+
           </div>
         </div>
       </div>
@@ -209,11 +220,24 @@
           </div>
 
           <div class="mb-3">
-            <input class="btn btn-primary btn-block" id="addmatch-submit" type="submit" value="Subir">
+            <input class="btn btn-primary btn-block" id="addmatch-submit" type="submit" value="✅ Subir">
           </div>
         </form>
         <div class="alert alert-danger hide" id="addmatch-error-players">Algún <strong>jugador/a</strong> se repite</div>
         <div class="alert alert-danger hide" id="addmatch-error-match_id"><strong>ID partida</strong> debe ser un número entero positivo</div>
+      </div>
+    </div>
+    <div class="row justify-content-center">
+      <div class="col col-md-9 col-lg-9 text-center hide" id="menu-feed">
+        <h3 class="mb-1 white">Feed</h3>
+        <table class="table text-left" id="feed-tabla">
+          <thead>
+            <th>Fecha</th>
+            <!-- <th></th> -->
+            <th>Acción</th>
+            <!-- <th>Puntos</th> -->
+          </thead>
+        </table>
       </div>
     </div>
   </div>
