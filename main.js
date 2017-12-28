@@ -16,6 +16,7 @@
   const db = {db : firebase.database().ref(), profiles : firebase.database().ref().child('profiles'), lie : firebase.database().ref().child('lie'), matches : firebase.database().ref().child('lie').child('matches')};
   const storage = {lie : firebase.storage().ref('lie')};
   //console.log('Hola');
+  const rewardPoints = {match_played : 1, match_wins : 2};
   function init(){
     for (var i = 0; i < 5; i++) {
       let row_radiant = $("#radiant").insertRow(i+1);
@@ -28,18 +29,26 @@
     })
   }
 
+  function playerPoints(player){
+    return player.lie.games * rewardPoints.match_played + player.lie.wins * rewardPoints.match_wins
+  }
+  function playerWR(player){
+    return ((player.lie.wins/player.lie.games)*100).toFixed(2)
+  }
   function ranking(){
     const table = $("#ranking-tabla").childNodes[1];
     deleteChildNodesSaveFirst(table);
     db.profiles.once('value').then((snap) => {
       if(!snap.exists()){return};
       snap = snap.val();
-      var array = Object.keys(snap).map((k) => {el = snap[k]; el.discord_id = k; return el}).filter((el) => {if(el.lie && el.lie.games > 0){return true}else{return false}});
+      var array = Object.keys(snap).map((k) => {el = snap[k]; el.lie.points = playerPoints(el); el.lie.wr = playerWR(el); el.discord_id = k; return el}).filter((el) => {if(el.lie && el.lie.games > 0){return true}else{return false}});
       array.sort(function(a,b){
         // let mmr = b.lie.mmr - a.lie.mmr;
         // if(mmr !== 0){return mmr};
-        let wins = b.lie.wins - a.lie.wins;
-        if(wins !== 0){return wins};
+        let points = b.lie.points - a.lie.points;
+        if(points !== 0){return points};
+        let winrate = b.lie.wr - a.lie.wr;
+        if(winrate !== 0){return winrate};
         let user1 = a.username.toLowerCase(), user2 = b.username.toLowerCase();
         if(user1 < user2){return -1};
         if(user1 > user2){return 1};
@@ -58,6 +67,7 @@
         // row.insertCell(2).innerText = data.lie.mmr;
         row.insertCell(2).innerText = data.lie.games;
         row.insertCell(3).innerText = data.lie.wins;
+        row.insertCell(4).innerText = data.lie.points;
       }
     })
   }
@@ -78,9 +88,9 @@
         if(!shot.exists()){return};
         $('#menu-player-img').src = player.avatar;
         $('#menu-player-username').innerText = player.username;
-        $('#menu-player-stats-games').innerText = player.lie.games;
+        $('#menu-player-stats-games').innerText = player.lie.wins + "(" + player.lie.games + ")";
         // $('#menu-player-stats-wins').innerText = player.lie.wins;
-        $('#menu-player-stats-mmr').innerText = player.lie.wins;
+        $('#menu-player-stats-points').innerText = playerPoints(player);
         var liematches = shot.val();
         var player_matches = Object.keys(liematches).map((m) => {var match = liematches[m]; match.id = m; return match}).filter((m) => {
           let radiant_play = m.radiant.split(',').find(p => p === player_id);
