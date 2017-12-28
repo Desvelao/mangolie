@@ -99,6 +99,7 @@
         });
         //console.log(player_matches);
         if(player_matches.length > 0){
+          player_matches = player_matches.sort(function(a,b){return b.ts - a.ts})
           for (var i = 0; i < player_matches.length; i++) {
             var match = player_matches[i];
             const row = table.insertRow(table.rows.length);
