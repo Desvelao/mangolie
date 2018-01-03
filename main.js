@@ -123,7 +123,7 @@
             }
             row.insertCell(2).innerText = date(match.ts);
             storage.lie.child(match.id+'.jpg').getDownloadURL().then(function(url){
-              row.insertCell(3).innerHTML = `<a href="${url}"><i class="fa fa-file-image-o mr-3"></i></a>`}).catch((error) => {row.insertCell(3).innerText = ''})
+              row.insertCell(3).innerHTML = `<a href="${url}" target="_blank"><i class="fa fa-file-image-o mr-3"></i></a>`}).catch((error) => {row.insertCell(3).innerText = ''})
           }
         }else{
           $("#menu-player-table").classList.add('hide');
