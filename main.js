@@ -271,24 +271,27 @@
       info.radiant.forEach((player) => {
         let dbplayer = snap[player].lie
         let victory = info.radiant_wins ? dbplayer.wins - 1 : dbplayer.wins;
-        // console.log(`Delete stats from ${player}`,dbplayer.wins, victory);
-        // db.profiles.child(player+'/lie').update({games : dbplayer.games - 1, wins : info.radiant_wins ? dbplayer.wins - 1 : dbplayer.wins})
+        console.log(`Delete stats from ${player}`,dbplayer.wins, victory);
+        db.profiles.child(player+'/lie').update({games : dbplayer.games - 1, wins : victory})
       });
       // console.log('DIRE');
       info.dire.forEach((player) => {
         let dbplayer = snap[player].lie
         let victory = !info.radiant_wins ? dbplayer.wins - 1 : dbplayer.wins;
-        // console.log(`Delete stats from ${player}`,dbplayer.wins, victory);
-        // db.profiles.child(player+'/lie').update({games : dbplayer.games - 1, wins : !info.radiant_wins ? dbplayer.wins - 1 : dbplayer.wins})
+        console.log(`Delete stats from ${player}`,dbplayer.wins, victory);
+        db.profiles.child(player+'/lie').update({games : dbplayer.games - 1, wins : victory})
       })
-      // db.matches.child(info.match_id).remove();
+      db.matches.child(info.match_id).remove();
       addFeed('deletematch',match_id);
+      feed_show();
+      $('#match-info').classList.add('hide');
     });
   })
   $('#match-info-admin-switch-winner').addEventListener('click',function(){
     let match_id = $('#match-info').getAttribute('match_id');
     if(!match_id){return};
     let info = getInfoFromMatchWeb();
+    console.log(info);
     // console.log(info);
     db.profiles.once('value').then((snap) => {
       snap = snap.val();
@@ -297,15 +300,17 @@
         let dbplayer = snap[player].lie
         let victory = !info.radiant_wins ? dbplayer.wins + 1 : dbplayer.wins - 1;
         // console.log(`Switch team victory from ${player}`,dbplayer.wins, victory);
-        // db.profiles.child(player+'/lie').update({wins : !info.radiant_wins ? dbplayer.wins + 1 : dbplayer.wins})
+        db.profiles.child(player+'/lie').update({wins : victory})
       });
       // console.log('DIRE');
       info.dire.forEach((player) => {
         let dbplayer = snap[player].lie
         let victory = info.radiant_wins ? dbplayer.wins + 1 : dbplayer.wins - 1;
         // console.log(`Switch team victory from ${player}`,dbplayer.wins, victory);
-        // db.profiles.child(player+'/lie').update({wins : info.radiant_wins ? dbplayer.wins + 1 : dbplayer.wins})
+        db.profiles.child(player+'/lie').update({wins : victory})
       })
+      console.log(match_id,info.radiant_wins,!info.radiant_wins);
+      db.matches.child(match_id).update({radiant_wins : !info.radiant_wins}).then(() => console.log('changed match'));
       // db.matches.child(info.match_id).remove();
       addFeed('switchmatch',match_id);
       match_show(match_id);

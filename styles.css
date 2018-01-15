@@ -22,6 +22,12 @@ body{
   background-color: rgba(179, 3, 182, 0.68);
 }
 
+.dv-text-primary{
+  color : #b303b6;
+}
+.dv-old-rankings{
+  background: #b303b6;
+}
 .dv-separator{
   margin-top: 56px;
 }
