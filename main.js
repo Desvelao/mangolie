@@ -77,6 +77,7 @@
     const table = $("#menu-player-table").childNodes[1];
     deleteChildNodesSaveFirst(table);
     player_id = player_id.toString();
+    $('#menu-player-info').classList.remove('hide');
     $("#menu-player-no-matches").classList.add('hide');
     $("#menu-player-table").classList.remove('hide');
     db.profiles.once('value').then((snap) => {
@@ -393,6 +394,7 @@
   $('#menu-player-select').addEventListener('change',function(){
     var lista = $('#menu-player-select');
     var opcion = lista.selectedIndex;
+    console.log(opcion);
     if(opcion === 0){return};
     //alert("Elegiste la opcion con indice: " + opcion + "la cual contiene el valor: " + lista.options[opcion].firstChild.data);
     $('#match-info').classList.remove('hide');
