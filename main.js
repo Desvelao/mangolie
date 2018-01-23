@@ -85,14 +85,18 @@
       snap = snap.val();
       //console.log(`player id: ${player_id}`);
       const player = getPlayerFromID(player_id,snap);
+      // console.log(player);
+      $('#menu-player-img').src = player.avatar;
+      $('#menu-player-username').innerText = player.username;
+      $('#menu-player-stats-games').innerText = player.lie.wins + "(" + player.lie.games + ")";
+      $('#menu-player-stats-points').innerText = playerPoints(player);
       //const matches_id = player.lie.matches.split(',');
       db.matches.once('value').then((shot) => {
-        if(!shot.exists()){return};
-        $('#menu-player-img').src = player.avatar;
-        $('#menu-player-username').innerText = player.username;
-        $('#menu-player-stats-games').innerText = player.lie.wins + "(" + player.lie.games + ")";
+        if(!shot.exists()){
+          $("#menu-player-table").classList.add('hide');
+          $("#menu-player-no-matches").classList.remove('hide');
+          return};
         // $('#menu-player-stats-wins').innerText = player.lie.wins;
-        $('#menu-player-stats-points').innerText = playerPoints(player);
         var liematches = shot.val();
         var player_matches = Object.keys(liematches).map((m) => {var match = liematches[m]; match.id = m; return match}).filter((m) => {
           let radiant_play = m.radiant.split(',').find(p => p === player_id);
@@ -131,7 +135,7 @@
           $("#menu-player-no-matches").classList.remove('hide');
         }
         showComponent('player');
-        $("#menu-player-info").classList.remove('hide');
+        // $("#menu-player-info").classList.remove('hide');
       })
     })
   }
@@ -394,7 +398,7 @@
   $('#menu-player-select').addEventListener('change',function(){
     var lista = $('#menu-player-select');
     var opcion = lista.selectedIndex;
-    console.log(opcion);
+    // console.log(opcion);
     if(opcion === 0){return};
     //alert("Elegiste la opcion con indice: " + opcion + "la cual contiene el valor: " + lista.options[opcion].firstChild.data);
     $('#match-info').classList.remove('hide');
