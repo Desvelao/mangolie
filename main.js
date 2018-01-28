@@ -15,7 +15,7 @@
   firebase.initializeApp(config);
   const db = {db : firebase.database().ref(), profiles : firebase.database().ref().child('profiles'), lie : firebase.database().ref().child('lie'), matches : firebase.database().ref().child('lie').child('matches'), feed : firebase.database().ref().child('lie').child('feed')};
   const storage = {lie : firebase.storage().ref('lie')};
-  const emojis = {match : {add : "✅",delete : "❌", switch : "🔁"}}
+  const emojis = {match : {add : "✅",delete : "❌", switch : "🔁"}, upload : "⬆"}
   //console.log('Hola');
   const rewardPoints = {match_played : 1, match_wins : 2};
   function init(){
@@ -547,14 +547,12 @@
       let opcion = select.selectedIndex;
       players[i] = select.value
     }
-    // if(players.some(function(item, idx){return players.indexOf(item) != idx})){
-    //   $('#addmatch-error-players').classList.remove('hide');return;
-    // }
+    if(players.some(function(item, idx){return players.indexOf(item) != idx})){
+      $('#addmatch-error-players').classList.remove('hide');return;
+    }
     let radiant_wins = document.getElementsByName('victory')[0].checked ? true : false;
     let match_id = $('#addmatch-match_id').value > 0 ? $('#addmatch-match_id').value : false;
-    // if(match_id  === false || match_id < 0){$('#addmatch-error-match_id').classList.remove('hide'); return;}
-    let pic = $('#addmatch-upload').files;
-    if(pic.length > 0){firebase.storage().ref('lie/'+match_id+'.jpg').put(pic[0]);}
+    if(match_id  === false || match_id < 0){$('#addmatch-error-match_id').classList.remove('hide'); console.log('No se ha colocado un ID de partida');return;}
     var update = {};
     update[match_id] = {radiant: players.slice(0,5).join(','), dire: players.slice(5).join(','), radiant_wins : radiant_wins ,ts : Math.round(new Date()/1000)};
     db.matches.update(update);
@@ -564,10 +562,27 @@
         let player = Object.keys(snap).map((k) => {el = snap[k]; el.discord_id = k; return el}).find(p => p.discord_id === players[i])
         db.profiles.child(player.discord_id+'/lie').update({games : player.lie.games + 1, wins : player.lie.wins + ((((i < 5) && radiant_wins) || ((i > 4) && !radiant_wins)) ? 1 : 0)})
       }
-      addFeed('addmatch',match_id);
-      resetForm($('#menu-login-addmatch'));
     })
+    let pic = $('#addmatch-upload').files;
+    if(pic.length > 0){
+      let task = firebase.storage().ref('lie/'+match_id+'.jpg').put(pic[0]);
+      task.on('state_changed',(snapshot) => {
+        let progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        $('#addmatch-submit').value = `${emojis.upload} Subiendo (${progress.toFixed(2)}%)`
+      },(error) => {console.log(error);},() => {
+        matchSubmitCompleted(match_id)
+      })
+    }else{
+      matchSubmitCompleted(match_id)
+    }
   })
+
+  function matchSubmitCompleted(match_id){
+    addFeed('addmatch',match_id);
+    $('#addmatch-submit').value = `${emojis.upload} Subida completada`;
+    resetForm($('#menu-login-addmatch'));
+    setTimeout(() => {$('#addmatch-submit').value = "✅ Subir"},5000)
+  }
 
   function addFeed(modo,match_id){
     let now = Math.round((new Date().getTime())/1000);
