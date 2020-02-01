@@ -1,2 +1,2 @@
 # mangoweb
-Página Web de Mango Bot para la LIE
+Página Web de Mango Bot para la LIE.
